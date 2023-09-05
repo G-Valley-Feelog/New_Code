@@ -6,6 +6,7 @@ import com.example.feelog.Entity.Member;
 import com.example.feelog.Service.RegisterService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,5 +47,19 @@ public class MemberController {
         System.out.println("login member = " + member);
         return mv;
     }
+
+    @GetMapping("/logoutAction") // 로그아웃
+    public ModelAndView logoutAction(HttpSession session){
+        ModelAndView mv = new ModelAndView();
+
+        // 세션 무효화
+        session.invalidate();
+
+        // 로그아웃 후 리다이렉트할 페이지 설정
+        mv.setViewName("index.html");
+
+        return mv;
+    }
+
 
 }

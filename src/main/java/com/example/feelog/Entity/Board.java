@@ -2,6 +2,8 @@ package com.example.feelog.Entity;
 
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
+
 import lombok.*;
 
 @Entity
@@ -34,5 +36,6 @@ public class Board {
 
     @Column(name = "updated_at", nullable = false)
     private Timestamp updatedAt;
+
 
 }

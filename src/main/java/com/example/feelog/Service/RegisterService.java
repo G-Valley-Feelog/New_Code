@@ -15,6 +15,10 @@ public class RegisterService {
     @Autowired
     private final MemberRepository memberRepository;
 
+    public RegisterService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
 
     public void signup(RegisterRequest dto) {
         Member member = new Member(dto);

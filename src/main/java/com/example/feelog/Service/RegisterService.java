@@ -5,8 +5,8 @@ import com.example.feelog.DTO.RegisterRequest;
 import com.example.feelog.Entity.Member;
 import com.example.feelog.Repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -16,10 +16,6 @@ public class RegisterService {
     private final MemberRepository memberRepository;
 
 
-    public RegisterService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
     public void signup(RegisterRequest dto) {
         Member member = new Member(dto);
         memberRepository.save(member);
@@ -28,6 +24,50 @@ public class RegisterService {
     public Optional<Member> login(LoginRequest dto) {
         return memberRepository.findByEmailAndPassword(dto.getEmail(), dto.getPassword());
     }
+
+    @Transactional
+    public Member updateMember(Long memberId, String newName, String newEmail, String newPassword, String newIntroduce) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+
+        if (optionalMember.isPresent()) {
+            Member existingMember = optionalMember.get();
+
+            if (!newName.isEmpty()) {
+                existingMember.setName(newName);
+            }
+
+            if (!newEmail.isEmpty()) {
+                existingMember.setEmail(newEmail);
+            }
+
+            if (!newPassword.isEmpty()) {
+                existingMember.setPassword(newPassword);
+            }
+
+            if (!newIntroduce.isEmpty()) {
+                existingMember.setIntroduce(newIntroduce);
+            }
+
+            return memberRepository.save(existingMember);
+        } else {
+            throw new IllegalArgumentException("해당 회원을 찾을 수 없습니다.");
+        }
+
+
+
+    }
+    @Transactional
+    public void deleteMember(Long memberId) {
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+
+        if (optionalMember.isPresent()) {
+            Member member = optionalMember.get();
+            memberRepository.delete(member);
+        } else {
+            throw new IllegalArgumentException("해당 회원을 찾을 수 없습니다.");
+        }
+    }
+
 
 //    public Member register(RegisterRequest request) {
 //        if(memberRepository.existsByEmail(request.getEmail())) {
@@ -45,6 +85,7 @@ public class RegisterService {
 //        );
 //    }
 
-
-
+    public Optional<Member> getById(Long memberId) {
+        return memberRepository.findById(memberId);
+    }
 }

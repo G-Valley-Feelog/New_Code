@@ -67,4 +67,16 @@ public class PostService {
     public List<Post> findALL(){
         return postRepository.findAll();
     }
+
+    public List<Post> findPostsByBlog(Blog blog) {
+        return postRepository.findAllByBlog(blog);
+    }
+
+    public Optional<Post> findByPostId(Long postId) {
+        return postRepository.findById(postId);
+    }
+
+    public Member getWriterById(Long postId) {
+        return postRepository.findById(postId).get().getMember();
+    }
 }

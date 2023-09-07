@@ -1,12 +1,18 @@
 package com.example.feelog.Controller;
 
 import com.example.feelog.DTO.BlogRequest;
+import com.example.feelog.DTO.CommentRequest;
 import com.example.feelog.Entity.Blog;
 import com.example.feelog.Entity.Member;
+import com.example.feelog.Entity.Post;
 import com.example.feelog.Service.BlogService;
+import com.example.feelog.Service.CommentService;
 import com.example.feelog.Service.PostService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +27,9 @@ public class BlogController {
     private BlogService blogService;
     @Autowired
     private PostService postService;
+    @Autowired
+    private CommentService commentService;
+
     @RequestMapping("/createblog")
     public ModelAndView createBlog(){
         ModelAndView mv = new ModelAndView("create-blog.html");
@@ -32,8 +41,9 @@ public class BlogController {
 
 
         ModelAndView mv = new ModelAndView("blog-home.html");
-        mv.addObject("blog", blogService.getBlogById(blogId));
-        mv.addObject("postList", postService.findALL());
+        Blog blog = blogService.getBlogById(blogId);
+        mv.addObject("blog", blog);
+        mv.addObject("postList", postService.findPostsByBlog(blog));
         return mv;
     }
 
@@ -41,15 +51,36 @@ public class BlogController {
     public ModelAndView createBlogAction(BlogRequest dto, HttpSession session){
         Member loginMember = (Member) session.getAttribute("login");
         Blog blog = blogService.insertBlog(dto,loginMember);
-        ModelAndView mv = new ModelAndView("index.html");
+        ModelAndView mv = new ModelAndView("/index");
         return mv;
     }
 
-    @RequestMapping("/blogpost/{blogId}")
-    public ModelAndView blogPost(@PathVariable Long blogId) {
+    @RequestMapping("/blogpost/{postId}")
+    public ModelAndView blogPost(@PathVariable Long postId) {
 
 
         ModelAndView mv = new ModelAndView("blog-post.html");
+        Optional<Post> postOptional = postService.findByPostId(postId);
+        if(postOptional.isPresent()) {
+            mv.addObject("post", postService.findByPostId(postId).get());
+            mv.addObject("writer", postService.getWriterById(postId));
+
+
+            mv.addObject("comments", commentService.getCommentsByPostId(postId));
+        }else{
+            mv.setStatus(HttpStatusCode.valueOf(404));
+        }
+        return mv;
+
+    }
+
+    @PostMapping("/blogpost/commentAction")
+    public ModelAndView commentAction(CommentRequest commentRequest, HttpSession session){
+        System.out.println(commentRequest);
+        commentService.insertComment(commentRequest);
+
+        ModelAndView mv = new ModelAndView("redirect:/blogpost/" + commentRequest.getPost_id());
+
         return mv;
 
     }

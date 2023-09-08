@@ -12,7 +12,7 @@
 
 ### [사용기술 및 스택]
 
-**OS** : windows10
+**OS** : windows10, MacOS
 
 **Language** : Java, Javascript
 

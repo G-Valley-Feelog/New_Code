@@ -10,6 +10,7 @@
 > 
 > 이를 만족시킬 수 있는 차별화된 블로그 플랫폼 제작을 목표로 프로젝트를 진행하였다.
 
+----
 ### [사용기술 및 스택]
 
 **OS** : windows10, MacOS
@@ -24,6 +25,7 @@
 
 **Back-End** : Spring Boot, JPA
 
+----
 ### [DB 설계]
 ![image](https://github.com/G-Valley-Feelog/New_Code/assets/129162938/b500da63-8bd3-4548-9546-7e0d3f54c1e3)
 

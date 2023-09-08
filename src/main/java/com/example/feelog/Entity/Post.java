@@ -8,6 +8,8 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,7 +22,7 @@ public class Post extends BaseTimeEntity{
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "member_id", nullable = false)
+    @JoinColumn(name = "member_id", nullable = true)
     private Member member;
 
     @ManyToOne
@@ -38,6 +40,9 @@ public class Post extends BaseTimeEntity{
     @Basic(fetch = FetchType.LAZY)
     @Column(name = "image_url", columnDefinition = "MEDIUMBLOB")
     private byte[] imageUrl;
+
+    @OneToMany(mappedBy = "post")
+    private List<PostLike> likedMember = new ArrayList<>();
 
     public Post(PostRequest postDTO, Member member, Blog blog) {
         super();

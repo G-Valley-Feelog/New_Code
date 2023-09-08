@@ -3,7 +3,9 @@ package com.example.feelog.Service;
 import com.example.feelog.DTO.PostRequest;
 import com.example.feelog.Entity.Blog;
 import com.example.feelog.Entity.Post;
+import com.example.feelog.Entity.PostLike;
 import com.example.feelog.Repository.BlogRepository;
+import com.example.feelog.Repository.LikeRepository;
 import com.example.feelog.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +33,8 @@ public class PostService {
 
     @Autowired
     private final MemberRepository memberRepository;
+    @Autowired
+    private final LikeRepository likeRepository;
 
    /* public BoardService(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
@@ -66,5 +70,33 @@ public class PostService {
     @Transactional
     public List<Post> findALL(){
         return postRepository.findAll();
+    }
+
+    public List<Post> findPostsByBlog(Blog blog) {
+        return postRepository.findAllByBlog(blog);
+    }
+
+    public Optional<Post> findByPostId(Long postId) {
+        return postRepository.findById(postId);
+    }
+
+    public Member getWriterById(Long postId) {
+        return postRepository.findById(postId).get().getMember();
+    }
+
+    public Long getLikeByPostId(Long postId) {
+        return likeRepository.countByPost(postRepository.findById(postId).get());
+    }
+
+    public void addLike(Long postId, Long memberId) {
+
+        PostLike like = new PostLike(postRepository.findById(postId).get(),memberRepository.findById(memberId).get());
+        likeRepository.save(like);
+    }
+
+    public Optional<PostLike> findByPostAndMember(Long postId, Long memberId){
+        Post post = postRepository.findById(postId).get();
+        Member member = memberRepository.findById(memberId).get();
+        return likeRepository.findByPostAndMember(post,member);
     }
 }

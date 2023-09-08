@@ -24,6 +24,9 @@
 
 **Back-End** : Spring Boot, JPA
 
+### [DB 설계]
+![image](https://github.com/G-Valley-Feelog/New_Code/assets/129162938/b500da63-8bd3-4548-9546-7e0d3f54c1e3)
+
 -----
 ### [블로그 생성 기능] ###
 >

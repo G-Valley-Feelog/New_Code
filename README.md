@@ -18,7 +18,7 @@
 
 **DB** : MySql
 
-**IDE** : IntelliJ, Graddle
+**IDE** : IntelliJ, Gradle
 
 **Front-End** : html, thymeleaf
 

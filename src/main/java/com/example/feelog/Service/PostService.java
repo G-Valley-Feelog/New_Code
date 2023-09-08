@@ -89,7 +89,14 @@ public class PostService {
     }
 
     public void addLike(Long postId, Long memberId) {
+
         PostLike like = new PostLike(postRepository.findById(postId).get(),memberRepository.findById(memberId).get());
         likeRepository.save(like);
+    }
+
+    public Optional<PostLike> findByPostAndMember(Long postId, Long memberId){
+        Post post = postRepository.findById(postId).get();
+        Member member = memberRepository.findById(memberId).get();
+        return likeRepository.findByPostAndMember(post,member);
     }
 }
